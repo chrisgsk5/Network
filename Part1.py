@@ -3,8 +3,9 @@ import socket
 import struct
 import time
 
-def pads(num, byt=struct.pack("I", 0)):
+def pads(num, byt=b"0"):
     res = b''
+    num = num if num % 4 == 0 else num + 4 - num % 4
     while num > 0:
         # print(len(res))
         res += byt
@@ -49,7 +50,7 @@ def main():
         su.settimeout(0.5)
         payload_len, pSec, step, stuNum = blen + 4, secretA, 1, 385
         header = struct.pack("!IIHH", payload_len, pSec, step, stuNum)
-        message = pads(blen + blen % 4)
+        message = pads(blen)
         cnt = 0
         while cnt < num:
 
@@ -79,7 +80,7 @@ def main():
 
     def stageD():
         header = struct.pack("!IIHH", len2, secretC, 1, 385)
-        message = pads(len2, struct.pack("c", c))
+        message = pads(len2, struct.pack("!B", c))
         print(c, message)
         for _ in range(num2):
             st.send(header + message)
@@ -94,8 +95,8 @@ def main():
     print(num, blen, udp_port, secretA)
     tcp_port, secretB = struct.unpack("!II", stageB())
     print(tcp_port, secretB)
-    num2, len2, secretC, c = struct.unpack("!IIIc", stageC())
-    print(num2, len2, secretC, c)
+    num2, len2, secretC, c = struct.unpack("!IIIB", stageC())
+    print(num2, len2, secretC, type(c))
     secretD = struct.unpack("!I", stageD())[0]
     print(secretD)
     # c = b'\x11'
