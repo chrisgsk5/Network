@@ -6,10 +6,9 @@ import time
 def pads(num, byt=b"0"):
     res = b''
     num = num if num % 4 == 0 else num + 4 - num % 4
-    while num > 0:
+    for _ in range(num):
         # print(len(res))
         res += byt
-        num -= 1
     return res
 
 def send_recur(s, packet):
