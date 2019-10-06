@@ -3,6 +3,10 @@ import socket
 import struct
 import time
 
+HOST = 'localhost'  # The remote host
+PORT = 12235  # The same port as used by the server
+TIMEOUT = 0.5
+
 def pads(num, byt=b"0"):
     res = b''
     num = num if num % 4 == 0 else num + 4 - num % 4
@@ -21,8 +25,7 @@ def send_recur(s, packet):
         return data
 
 def main():
-    HOST = 'attu2.cs.washington.edu'    # The remote host
-    PORT = 12235              # The same port as used by the server
+
     su = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     st = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # TCP
 
@@ -46,7 +49,7 @@ def main():
     # Step b
     def stageB():
         su.connect((HOST, udp_port))
-        su.settimeout(0.5)
+        su.settimeout(TIMEOUT)
         payload_len, pSec, step, stuNum = blen + 4, secretA, 1, 385
         header = struct.pack("!IIHH", payload_len, pSec, step, stuNum)
         message = pads(blen)
