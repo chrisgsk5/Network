@@ -2,6 +2,7 @@
 import socket
 import struct
 import time
+import sys
 
 HOST = 'localhost'  # The remote host
 PORT = 12235  # The same port as used by the server
@@ -16,13 +17,21 @@ def pads(num, byt=b"0"):
     return res
 
 def send_recur(s, packet):
-    try:
-        s.send(packet)
-        data = s.recv(1024)
-    except:
-        send_recur(s, packet)
-    else:
-        return data
+    # try:
+    #     s.send(packet)
+    #     data = s.recv(1024)
+    # except:
+    #     send_recur(s, packet)
+    # else:
+    #     return data
+    while 1:
+        try:
+            s.send(packet)
+            data = s.recv(1024)
+        except:
+            continue
+        else:
+            return data
 
 def main():
 
@@ -93,6 +102,9 @@ def main():
 
 
 
+    if len(sys.argv) != 2:
+        sys.exit('Usage: python client.py [server address]')
+    HOST = str(sys.argv[1])
     num, blen, udp_port, secretA = struct.unpack("!IIII", stageA())
     print(num, blen, udp_port, secretA)
     tcp_port, secretB = struct.unpack("!II", stageB())
