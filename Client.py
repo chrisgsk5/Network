@@ -3,6 +3,7 @@ import socket
 import struct
 import time
 import sys
+import time
 
 HOST = 'localhost'  # The remote host
 PORT = 12235  # The same port as used by the server
@@ -24,10 +25,13 @@ def send_recur(s, packet):
     #     send_recur(s, packet)
     # else:
     #     return data
-    while 1:
+    start = time.time()
+    while start - time.time() < TIMEOUT:
         try:
             s.send(packet)
+            print(packet)
             data = s.recv(1024)
+            print(data)
         except:
             continue
         else:
@@ -44,7 +48,7 @@ def main():
         payload_len, pSec, step, stuNum = 12, 0, 1, 385
         header = struct.pack("!IIHH", payload_len, pSec, step, stuNum)
         message = b'hello world\0'
-        print(len(header + message))
+        print(len(header + message), header + message)
         su.send(header + message)
         data = su.recv(1024)
         print('a Received', repr(data), len(data))
