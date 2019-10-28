@@ -23,8 +23,8 @@ IPS = {
 
 class Part3Controller(object):
     """
-  A Connection object for that switch is passed to the __init__ function.
-  """
+    A Connection object for that switch is passed to the __init__ function.
+    """
 
     def __init__(self, connection):
         print(connection.dpid)
@@ -146,9 +146,9 @@ class Part3Controller(object):
 
     def _handle_PacketIn(self, event):
         """
-    Packets not handled by the router rules will be
-    forwarded to this method to be handled by the controller
-    """
+        Packets not handled by the router rules will be
+        forwarded to this method to be handled by the controller
+        """
 
         packet = event.parsed  # This is the parsed packet data.
         if not packet.parsed:
@@ -161,8 +161,8 @@ class Part3Controller(object):
 
 def launch():
     """
-  Starts the component
-  """
+    Starts the component
+    """
 
     def start_switch(event):
         log.debug("Controlling %s" % (event.connection,))

@@ -27,29 +27,20 @@ class Firewall (object):
     msg_icmp = of.ofp_flow_mod()
     msg_icmp.priority = 2
     msg_icmp.match.dl_type = 0x800
-    msg_icmp.match.nw_proto = pkt.ICMP_PROTOCOL
+    msg_icmp.match.nw_proto = pkt.ipv4.ICMP_PROTOCOL
     msg_icmp.actions.append(of.ofp_action_output(port = of.OFPP_FLOOD))
     connection.send(msg_icmp)
-
-
-
-
-    # msg.match.nw_src =
-    # msg.match.nw_dst = IPAddr("192.168.101.101")
-    # msg.match.tp_dst = 80
-    # msg.actions.append(of.ofp_action_output(port=4))
 
     msg_arp = of.ofp_flow_mod()
     msg_arp.priority = 1
     msg_arp.match.dl_type = pkt.ethernet.ARP_TYPE
-    msg_icmp.actions.append(of.ofp_action_output(port = of.OFPP_FLOOD))
+    msg_arp.actions.append(of.ofp_action_output(port = of.OFPP_FLOOD))
     connection.send(msg_arp)
 
     msg_default = of.ofp_flow_mod()
     msg_default.priority = 0
+    msg_default.match.dl_type = 0x800
     connection.send(msg_default)
-
-
 
   def _handle_PacketIn (self, event):
     """
